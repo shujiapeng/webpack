@@ -6,14 +6,13 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const webpack = require('webpack')
 
 module.exports = {
-  mode: 'production',
   entry: {
-    app: './src/index.js'
+    app: './src/index.js',
+    print: './src/print.js'
   },
   output: {
     filename: '[name].bundle.js',
-    path: path.resolve(__dirname, './dist/'),
-    publicPath: '/'
+    path: path.resolve(__dirname, './dist/')
   },
   module: {
     rules: [{
@@ -22,7 +21,7 @@ module.exports = {
         'style-loader',
         'css-loader'
       ]
-    }, {  
+    }, {
       test: /\.(png|svg|jpg|gif)$/,
       use: [
         'file-loader'
@@ -42,17 +41,29 @@ module.exports = {
       meta: {
         viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no'
       }
-    }),
-    // 当开启 HMR 的时候使用该插件会显示模块的相对路径，建议用于开发环境。
-    new webpack.NamedModulesPlugin(),
-    // 模块热替换插件
-    new webpack.HotModuleReplacementPlugin()
+    })
   ],
-  devtool: 'inline-source-map',
-  // webpack-dev-server 带有许多可配置的选项 了解更多：https://www.webpackjs.com/configuration/dev-server/
-  devServer: {
-    contentBase: './dist',
-    hot: true,
-    host: 'localhost'
+  // 默认配置
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 30000,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: '~',
+      name: true,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    }
   }
 }
