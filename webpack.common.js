@@ -3,16 +3,27 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 // 清理dist文件夹的插件，会把历史生成的文件删掉，留下要用的
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-const webpack = require('webpack')
 
 module.exports = {
   entry: {
-    app: './src/index.js',
-    print: './src/print.js'
+    app: './src/index.js'
   },
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].[chunkhash:8].js',
     path: path.resolve(__dirname, './dist/')
+  },
+  optimization: {
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    }
   },
   module: {
     rules: [{
@@ -42,28 +53,5 @@ module.exports = {
         viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no'
       }
     })
-  ],
-  // 默认配置
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      minSize: 30000,
-      minChunks: 1,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
-      automaticNameDelimiter: '~',
-      name: true,
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10
-        },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true
-        }
-      }
-    }
-  }
+  ]
 }

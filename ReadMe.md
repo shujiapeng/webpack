@@ -1,7 +1,10 @@
 packjson 说明
 
 // 通常用于描述移除 JavaScript 上下文中的未引用代码(dead-code)。它依赖于 ES2015 模块系统中的静态结构特性，例如 import 和 export
+// false 时 所有文件都可以 安全地删除文件中未使用的部分
+// 传入数组表示数组里面的文件不可以安全删除未使用部分
 "sideEffects": false
+
 
 // 清理dist文件夹的插件，会把历史生成的文件删掉，留下要用的 使用时传入数组，数组中是要清理的文件目录
 // 如 new CleanWebpackPlugin(['dist']),
